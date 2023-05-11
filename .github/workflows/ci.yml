@@ -1,0 +1,19 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+    CI:
+        name: Lint and tests on ${{ matrix.os }}
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                os: [ubuntu-latest]
+        steps:
+            - uses: actions/checkout@v3
+            - name: Install dependencies
+              run: npm ci
+            - name: Run linter
+              run: npm run lint
+            - name: Run tests
+              run: npm test
