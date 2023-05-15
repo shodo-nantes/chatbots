@@ -1,3 +1,4 @@
+
 function bot(message) {
     if (message?.sender?.displayName) {
         return botResponse(`Hello ${message.sender.displayName}!`);
@@ -37,3 +38,4 @@ function getUserGreeting(user, date) {
 }
 
 module.exports = { bot, greetsAllBirthday };
+
