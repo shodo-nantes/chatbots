@@ -9,7 +9,7 @@ describe('bot', () => {
     test('should be a function', () => {
         expect(bot).toBeInstanceOf(Function);
     });
-    test.skip('should return a hello world message', () => {
+    test('should return a hello world message', () => {
         expect(bot()).toBe('Hello World!');
     });
     test.skip('should return a hello message with a name', () => {
