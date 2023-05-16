@@ -57,7 +57,12 @@ module.exports = {
         ],
         'import/no-anonymous-default-export': ['error', { allowNew: true }],
         'no-console': ['error', { allow: ['warn', 'error', 'info'] }],
-        'prettier/prettier': 'error',
+        'prettier/prettier': [
+            'error',
+            {
+                endOfLine: 'auto',
+            },
+        ],
         'unicorn/filename-case': [
             'error',
             {
