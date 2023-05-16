@@ -1,5 +1,5 @@
 function bot() {
-    return 'Hellow World!';
+    return 'Hello World!';
 }
 
 module.exports = bot;
