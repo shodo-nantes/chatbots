@@ -1,12 +1,7 @@
-function botResponse(message) {
-    return { text: message };
-}
-
 function bot(message) {
-    if (message?.sender?.displayName) {
-        return botResponse(`Hello ${message.sender.displayName}!`);
+    if (message?.message?.sender?.displayName) {
+        return `Hello ${message.message.sender.displayName}!`;
     }
-    return botResponse('Hello World!');
+    return 'Hello World!';
 }
-
 module.exports = bot;
