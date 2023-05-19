@@ -8,7 +8,7 @@ const users = [
         birthday: '20 Mai',
     },
     {
-        name: 'Spider Man',
+        name: 'Peter Parker',
         birthday: '20 Mai',
     },
 ];
@@ -27,5 +27,16 @@ function greetsUserBirthday(user, date) {
         return `Joyeux anniversaire ${user.name}`;
     }
 }
+////////////////////////////////////////////////////////////////////////////
+function getUserByBirthday(date) {
+    const userNameSameBirthday = [];
 
-module.exports = { greetsBirthday };
+    for (const user of users) {
+        if (user.birthday === date) {
+            userNameSameBirthday.push(user.name);
+        }
+    }
+    return userNameSameBirthday;
+}
+
+module.exports = { greetsBirthday, getUserByBirthday };

@@ -15,4 +15,8 @@ describe('birthdayBot', () => {
     test('Should wish happy birthday to Thomas price every 20th May', () => {
         expect(birthdayBot.greetsBirthday('20 Mai 2060')).toStrictEqual(thomasPriceBirthday);
     });
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    test('Should return users names of which got same birthday date', () => {
+        expect(birthdayBot.getUserByBirthday('20 Mai')).toStrictEqual(['Thomas Price', 'Peter Parker']);
+    });
 });
