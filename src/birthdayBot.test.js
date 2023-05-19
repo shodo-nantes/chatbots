@@ -3,6 +3,7 @@ const birthdayBot = require('./birthdayBot');
 const expectedMichelBirthdayMessage = 'Joyeux anniversaire Michel Anniversaire';
 const thomasPriceBirthday = 'Joyeux anniversaire Thomas Price';
 
+
 describe('birthdayBot', () => {
     const users = [
         {
@@ -37,5 +38,6 @@ describe('birthdayBot', () => {
             'Joyeux anniversaire Thomas Price',
             'Joyeux anniversaire Peter Parker',
         ]);
+
     });
 });

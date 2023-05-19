@@ -57,5 +57,5 @@ function greetsUserBirthday(user, date) {
         return `Joyeux anniversaire ${user.name}`;
     }
 }
-
 module.exports = { greetsBirthdays, greetsUserBirthday, getBirthdaysToGreet };
+
