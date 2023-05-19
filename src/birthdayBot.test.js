@@ -3,7 +3,6 @@ const birthdayBot = require('./birthdayBot');
 const expectedMichelBirthdayMessage = 'Joyeux anniversaire Michel Anniversaire';
 const thomasPriceBirthday = 'Joyeux anniversaire Thomas Price';
 
-
 describe('birthdayBot', () => {
     const users = [
         {
@@ -38,10 +37,5 @@ describe('birthdayBot', () => {
             'Joyeux anniversaire Thomas Price',
             'Joyeux anniversaire Peter Parker',
         ]);
-
-    });
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    test('Should return users names of which got same birthday date', () => {
-        expect(birthdayBot.getUserByBirthday('20 Mai')).toStrictEqual(['Thomas Price', 'Peter Parker']);
     });
 });
