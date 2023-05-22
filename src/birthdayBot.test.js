@@ -1,4 +1,3 @@
-
 const birthdayBot = require('./birthdayBot');
 describe('birthdayBot', () => {
     test('Should wish birthday to Michel everyday', () => {

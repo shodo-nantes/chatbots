@@ -1,4 +1,3 @@
-
 const jsonData = require('./users.json');
 
 //Souhaite l'anniversaire des employés.
@@ -27,5 +26,5 @@ function getBirthdaysToGreet(date) {
         return greeting;
     }
 }
-module.exports = { greetsBirthdays, getBirthdaysToGreet };
 
+module.exports = { greetsBirthdays, getBirthdaysToGreet };
