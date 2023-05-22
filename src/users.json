@@ -1,7 +1,7 @@
 {
     "users": [
-        { "name": "Gwenn Stacy", "birthday": "10 Avril" },
-        { "name": "Thomas Price", "birthday": "20 Mai" },
-        { "name": "Peter Parker", "birthday": "20 Mai" }
+        { "name": "Gwenn Stacy", "birthday": "10/04/1985" },
+        { "name": "Thomas Price", "birthday": "20/05/1992" },
+        { "name": "Peter Parker", "birthday": "20/05/1999" }
     ]
 }
