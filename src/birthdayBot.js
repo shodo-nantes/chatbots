@@ -1,6 +1,7 @@
 const jsonData = require('./users.json');
 
 //Souhaite l'anniversaire des employés.
+
 function greetsBirthdays(date) {
     //Si la fonction retourne une valeur alors on la retourne
     if (getBirthdaysToGreet(date)) {
@@ -9,7 +10,6 @@ function greetsBirthdays(date) {
     //Sinon on renvoie Joyeux anniversaire Michel Anniversaire
     return 'Joyeux anniversaire Michel Anniversaire';
 }
-
 //Cherche s'il y a des anniversaires à souhaiter.
 function getBirthdaysToGreet(date) {
     //utilisation de la programmation fonctionnelle, on definit ce que l'on souhaite recuperer, plus rapide à utiliser que des boucles
