@@ -5,15 +5,14 @@
  * @param {Object} request Request sent from Google Chat.
  * @param {Object} response Response to send back.
  */
-exports.attendance = function attendance(request, response) {
+module.exports = function attendance(request, response) {
     if (request.method === 'GET' || !request.body.message) {
         response.send('Hello! This function is meant to be used in a Google Chat Space.');
+        return;
     }
 
     const message = request.body.message.text;
     const sender = request.body.message.sender.displayName;
-    console.info(`message : ${message}`);
-    console.info(`sender : ${sender}`);
     const data = createMessage(message, sender);
 
     response.send(data);
@@ -21,14 +20,14 @@ exports.attendance = function attendance(request, response) {
 
 /**
  * Creates a card with two widgets.
- * @param {string} message the sender's display name.
+ * @param {string} message the sender's message.
+ * @param {string} sender the sender's display name.
  * @return {Object} a card with the user's avatar.
  */
 function createMessage(message, sender) {
     const user = `${sender} : `;
     const result = user + compute(message);
 
-    console.info(`result : ${result}`);
     return { text: result };
 }
 
@@ -54,6 +53,5 @@ function isPresent(attendanceElement) {
 }
 
 function toto(attendanceElement) {
-    console.info(`element : ${attendanceElement}`);
     return isPresent(attendanceElement) ? '✅' : attendanceElement === '?' ? '❓' : '❌';
 }
