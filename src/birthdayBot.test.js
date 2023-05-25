@@ -8,12 +8,11 @@ describe('birthdayBot', () => {
     });
 
     test('Should return happy birthday to users with the same birthday', () => {
-        jsonData.users.map((user) => {
+        for (const user of jsonData.users) {
             if (user.name === 'Thomas Price' || user.name === 'Peter Parker') {
                 user.birthday = DateTime.now().toFormat('dd/MM/yyyy');
             }
-            return user;
-        });
+        }
 
         expect(birthdayBot.greetsBirthdays()).toContain(
             'Joyeux anniversaire Thomas Price',
@@ -23,7 +22,7 @@ describe('birthdayBot', () => {
     });
 
     test("Should not return user if it's not their birthday", () => {
-        for (const user in jsonData.users) {
+        for (const user of jsonData.users) {
             const today = DateTime.now();
             const todayMinusOneDay = today.minus(86_400_000);
             if (user.name === 'Gwenn Stacy') {
