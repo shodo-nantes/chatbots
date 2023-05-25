@@ -23,14 +23,13 @@ describe('birthdayBot', () => {
     });
 
     test("Should not return user if it's not their birthday", () => {
-        jsonData.users.map((user) => {
+        for (const user in jsonData.users) {
             const today = DateTime.now();
             const todayMinusOneDay = today.minus(86_400_000);
             if (user.name === 'Gwenn Stacy') {
                 user.birthday = todayMinusOneDay.toFormat('dd/MM/yyyy');
             }
-            return user;
-        });
+        }
         expect(birthdayBot.greetsBirthdays()).not.toContain('Joyeux anniversaire Gwenn Stacy');
     });
 });
