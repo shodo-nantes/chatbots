@@ -1,6 +1,6 @@
 const { DateTime } = require('luxon');
 const jsonData = require('./users.json');
-const birthdayBot = require('./birthdayBot');
+const birthdayBot = require('./birthday');
 
 describe('birthdayBot', () => {
     test('Should wish birthday to Michel everyday', () => {
