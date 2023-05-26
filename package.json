@@ -1,7 +1,7 @@
 {
-    "name": "birthday-bot",
+    "name": "chatbots",
     "version": "1.0.0",
-    "description": "A awesome google chatbot birthday",
+    "description": "Chatbots for Google Chat",
     "scripts": {
         "prepare": "husky install",
         "prebuild": "rimraf dist",
