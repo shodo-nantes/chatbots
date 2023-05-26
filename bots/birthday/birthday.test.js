@@ -29,6 +29,6 @@ describe('birthdayBot', () => {
                 user.birthday = todayMinusOneDay.toFormat('dd/MM/yyyy');
             }
         }
+        expect(birthdayBot.greetsBirthdays()).not.toContain('Joyeux anniversaire Gwenn Stacy');
     });
-    expect(birthdayBot.greetsBirthdays()).not.toContain('Joyeux anniversaire Gwenn Stacy');
 });
