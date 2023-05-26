@@ -21,7 +21,7 @@ for (const botFolderPath of glob.sync(`${BOTS_FOLDER}/*`)) {
             replace({
                 preventAssignment: false,
                 values: {
-                    'module.exports': 'exports.attendance',
+                    'module.exports': `exports.${botName}`,
                 },
             }),
         ],
