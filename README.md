@@ -18,7 +18,15 @@ To install Node.js and NPM, try [nvm](https://github.com/nvm-sh/nvm#installing-a
 
 The project is now ready to run.
 
-### Running
+### Building
+
+Run `npm run build` to build the project.
+
+It will create a `dist` folder with the compiled code. For each bot there will be a single file.
+
+Eg: `dist/attendance.js` for the attendance bot.
+
+### Testing
 
 -   Run `npm test` to start the tests.
 
