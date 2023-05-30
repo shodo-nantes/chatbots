@@ -22,7 +22,6 @@ describe('birthdayBot', () => {
 
     test("Should not return user if it's not their birthday", () => {
         for (const user of jsonData.users) {
-            const today = Date.now();
             if (user.name === 'Gwenn Stacy') {
                 user.birthday = today;
             }
