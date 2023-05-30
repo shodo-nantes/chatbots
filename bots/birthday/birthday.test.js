@@ -19,6 +19,4 @@ describe('birthdayBot', () => {
             'Joyeux anniversaire Michel Anniversaire',
         );
     });
-
-  
 });
