@@ -13,7 +13,6 @@ function greetsBirthdays() {
 
 function getUserIfBirthday(user) {
     const today = Date.now();
-    //const userBirthday = DateTime.fromFormat(user.birthday, 'dd/MM/yyyy');
     const userBirthday = new Date(user.birthday);
     if (today.day === userBirthday.day && today.month === userBirthday.month) {
         return user;
