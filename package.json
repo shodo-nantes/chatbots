@@ -10,9 +10,6 @@
         "lint-staged:fix": "npm run lint-staged -- --fix",
         "test": "jest"
     },
-    "dependencies": {
-        "luxon": "^3.3.0"
-    },
     "devDependencies": {
         "eslint": "^8.38.0",
         "eslint-config-prettier": "^8.8.0",

@@ -1,5 +1,4 @@
 const jsonData = require('./users.json');
-const { DateTime } = require('luxon');
 
 function greetsBirthdays() {
     const greetings = jsonData.users
@@ -13,9 +12,9 @@ function greetsBirthdays() {
 }
 
 function getUserIfBirthday(user) {
-    const today = DateTime.now();
-    const userBirthday = DateTime.fromFormat(user.birthday, 'dd/MM/yyyy');
-
+    const today = Date.now();
+    //const userBirthday = DateTime.fromFormat(user.birthday, 'dd/MM/yyyy');
+    const userBirthday = new Date(user.birthday);
     if (today.day === userBirthday.day && today.month === userBirthday.month) {
         return user;
     }
