@@ -1,6 +1,6 @@
-# google-chatbot-birthday
+# Chat bots
 
-A awesome google chatbot birthday
+Chatbots for Google Chat.
 
 ## Getting Started
 
@@ -18,9 +18,68 @@ To install Node.js and NPM, try [nvm](https://github.com/nvm-sh/nvm#installing-a
 
 The project is now ready to run.
 
-### Running
+## Usage
+
+### Building
+
+Run `npm run build` to build the project.
+
+It will create a `dist` folder with the compiled code. For each bot there will be a single file.
+
+Eg: `dist/attendance.js` for the attendance bot.
+
+## Development
+
+### Testing
+
+Jest is used as a test runner.
 
 -   Run `npm test` to start the tests.
+
+## Creating a bot
+
+### Create the folder
+
+To create a new bot, create a new folder with the name of the bot in the `bots` folder.
+
+Eg: `bots/attendance`
+
+### Create the bot file
+
+Inside the folder create a `js` file, the name of the file should be the name of the bot.
+
+Eg: `bots/attendance/attendance.js`
+
+The file should export a function that will be called when the bot is triggered.
+
+Eg:
+
+```js
+module.exports = function attendance() {
+    // Bot code
+};
+```
+
+### Add tests
+
+Create a test file with the same name as the bot file, but with the `.test.js` extension.
+
+Eg: `bots/attendance/attendance.test.js`
+
+The test file should import the bot function and run it in tests.
+
+Eg:
+
+```js
+const attendance = require('./attendance');
+
+describe('attendance', () => {
+    it('should return a message', () => {
+        const message = attendance();
+        expect(message).toBe('Hello World!');
+    });
+});
+```
 
 ## Tools
 
