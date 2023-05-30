@@ -12,9 +12,6 @@
         "lint-staged:fix": "npm run lint-staged -- --fix",
         "test": "jest"
     },
-    "dependencies": {
-        "luxon": "^3.3.0"
-    },
     "devDependencies": {
         "@rollup/plugin-replace": "^5.0.2",
         "eslint": "^8.38.0",
@@ -31,5 +28,8 @@
         "rimraf": "^5.0.1",
         "rollup": "^3.23.0"
     },
-    "license": "MIT"
+    "license": "MIT",
+    "dependencies": {
+        "luxon": "^3.3.0"
+    }
 }
