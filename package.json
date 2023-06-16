@@ -10,10 +10,13 @@
         "lint:fix": "npm run lint -- --fix",
         "lint-staged": "eslint $(git diff --cached --name-only --diff-filter=ACMRTUXB | grep -E '\\.(ts|tsx|js|jsx)$') --ext .ts,.tsx,.js,.jsx",
         "lint-staged:fix": "npm run lint-staged -- --fix",
-        "test": "jest"
+        "test": "jest",
+        "test:mutate": "stryker run"
     },
     "devDependencies": {
         "@rollup/plugin-replace": "^5.0.2",
+        "@stryker-mutator/core": "^7.0.2",
+        "@stryker-mutator/jest-runner": "^7.0.2",
         "eslint": "^8.38.0",
         "eslint-config-prettier": "^8.8.0",
         "eslint-plugin-github": "^4.7.0",

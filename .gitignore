@@ -36,3 +36,7 @@ dist
 
 # ignore yarn.lock
 yarn.lock
+
+# stryker temp files
+.stryker-tmp
+reports
