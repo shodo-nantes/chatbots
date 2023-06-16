@@ -46,26 +46,131 @@ describe('Attendance', () => {
             });
         });
 
-        it('when message is oO0vV then should return ✅ | ✅ | ✅ | ✅ | ✅', () => {
-            request.body.message.text += 'oO0vV';
+        it.each(['o', 'O', '0', 'v', 'V'])('display ✅ for command indicating that user is present', (command) => {
+            request.body.message.text += `xx${command}xx`;
             attendance(request, response);
 
             expect(response.send).toHaveBeenCalledWith({
-                text: 'John Doe : ✅ | ✅ | ✅ | ✅ | ✅',
+                text: 'John Doe : ❌ | ❌ | ✅ | ❌ | ❌',
             });
         });
 
-        it('when message is xox?x then should return ❌ | ✅ | ❌ | ❓ | ❌', () => {
-            request.body.message.text += 'xox?x';
+        it.each([...'azertyuip^$qsdfghjklmù*wxcbn,;:!123456789'])(
+            'display ❌ by default for any unknown command "%s"',
+            (command) => {
+                request.body.message.text += `oo${command}oo`;
+                attendance(request, response);
+
+                expect(response.send).toHaveBeenCalledWith({
+                    text: 'John Doe : ✅ | ✅ | ❌ | ✅ | ✅',
+                });
+            },
+        );
+
+        describe('display single command at ', () => {
+            it('first position', () => {
+                request.body.message.text += 'oxxxx';
+                attendance(request, response);
+
+                expect(response.send).toHaveBeenCalledWith({
+                    text: 'John Doe : ✅ | ❌ | ❌ | ❌ | ❌',
+                });
+            });
+
+            it('second position', () => {
+                request.body.message.text += 'xoxxx';
+                attendance(request, response);
+
+                expect(response.send).toHaveBeenCalledWith({
+                    text: 'John Doe : ❌ | ✅ | ❌ | ❌ | ❌',
+                });
+            });
+
+            it('third position', () => {
+                request.body.message.text += 'xxoxx';
+                attendance(request, response);
+
+                expect(response.send).toHaveBeenCalledWith({
+                    text: 'John Doe : ❌ | ❌ | ✅ | ❌ | ❌',
+                });
+            });
+
+            it('fourth position', () => {
+                request.body.message.text += 'xxxox';
+                attendance(request, response);
+
+                expect(response.send).toHaveBeenCalledWith({
+                    text: 'John Doe : ❌ | ❌ | ❌ | ✅ | ❌',
+                });
+            });
+            it('fifth position', () => {
+                request.body.message.text += 'xxxxo';
+                attendance(request, response);
+
+                expect(response.send).toHaveBeenCalledWith({
+                    text: 'John Doe : ❌ | ❌ | ❌ | ❌ | ✅',
+                });
+            });
+        });
+
+        describe('display additional ❌ for partial command', () => {
+            it('when missing four last characters', () => {
+                request.body.message.text += 'o';
+                attendance(request, response);
+
+                expect(response.send).toHaveBeenCalledWith({
+                    text: 'John Doe : ✅ | ❌ | ❌ | ❌ | ❌',
+                });
+            });
+
+            it('when missing three last characters', () => {
+                request.body.message.text += 'oo';
+                attendance(request, response);
+
+                expect(response.send).toHaveBeenCalledWith({
+                    text: 'John Doe : ✅ | ✅ | ❌ | ❌ | ❌',
+                });
+            });
+
+            it('when missing two last characters', () => {
+                request.body.message.text += 'ooo';
+                attendance(request, response);
+
+                expect(response.send).toHaveBeenCalledWith({
+                    text: 'John Doe : ✅ | ✅ | ✅ | ❌ | ❌',
+                });
+            });
+
+            it('when missing the last character', () => {
+                request.body.message.text += 'oooo';
+                attendance(request, response);
+
+                expect(response.send).toHaveBeenCalledWith({
+                    text: 'John Doe : ✅ | ✅ | ✅ | ✅ | ❌',
+                });
+            });
+        });
+
+        it.each(['x', 'o', '?', '-whatever'])('never display more than five attendance days', (extraText) => {
+            request.body.message.text += `xoxox${extraText}`;
             attendance(request, response);
 
             expect(response.send).toHaveBeenCalledWith({
-                text: 'John Doe : ❌ | ✅ | ❌ | ❓ | ❌',
+                text: 'John Doe : ❌ | ✅ | ❌ | ✅ | ❌',
             });
         });
 
-        it('when message is xox?x and start with /attendance then should return ❌ | ✅ | ❌ | ❓ | ❌', () => {
-            request.body.message.text = '/attendance xox?x';
+        it(`display ❓ for command indicating that user doesn't know if present or not`, () => {
+            request.body.message.text += '?';
+            attendance(request, response);
+
+            expect(response.send).toHaveBeenCalledWith({
+                text: 'John Doe : ❓ | ❌ | ❌ | ❌ | ❌',
+            });
+        });
+
+        it.each(['@attendance-chatbot', '/attendance'])('triggers command for %s command prefix', (commandPrefix) => {
+            request.body.message.text = `${commandPrefix} xox?x`;
             attendance(request, response);
 
             expect(response.send).toHaveBeenCalledWith({

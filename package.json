@@ -11,6 +11,7 @@
         "lint-staged": "eslint $(git diff --cached --name-only --diff-filter=ACMRTUXB | grep -E '\\.(ts|tsx|js|jsx)$') --ext .ts,.tsx,.js,.jsx",
         "lint-staged:fix": "npm run lint-staged -- --fix",
         "test": "jest",
+        "test:coverage": "jest --coverage",
         "test:mutate": "stryker run"
     },
     "devDependencies": {
