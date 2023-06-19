@@ -98,3 +98,26 @@ This project uses [husky](https://github.com/typicode/husky) to run pre-commit h
 Open the project in VSCode.
 
 Type `Ctrl + Shift + X` to open the extensions panel. Type `@recommended` and install the recommended extensions.
+
+### Stryker Mutator
+
+[StrykerJS](https://stryker-mutator.io/docs/stryker-js/introduction/) is configured to run on this project, when you 
+want to test your tests with mutation testing (not continuously).
+
+To run mutation testing on the whole project :
+```shell
+npm run test:mutate
+```
+Or the real underlying command
+```shell 
+stryker run
+```
+
+To run mutation testing on a specific folder :
+```shell
+npm run test:mutate -- --mutate "path/to/my/folder/**/!(*.test).js"
+```
+Or the real underlying command
+```shell
+stryker run --mutate "path/to/my/folder/**/!(*.test).js"
+```
