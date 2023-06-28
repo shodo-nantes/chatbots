@@ -23,6 +23,6 @@ jobs:
         uses: 'google-github-actions/deploy-cloud-functions@v1'
         with:
           name: '${{ vars.ATTENDANCE_CLOUD_FUNCTION_NAME }}'
-          source_dir: 'dist/attendance.js'
+          source_dir: 'dist/attendance'
           entry_point: 'attendance'
           runtime: 'nodejs16'
