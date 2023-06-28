@@ -1,0 +1,28 @@
+name: 'Deployment attendance'
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  job_id:
+    runs-on: 'ubuntu-latest'
+
+    steps:
+      - uses: 'actions/checkout@v3'
+      - name: Install dependencies
+        run: npm ci
+      - name: Build attendance bot
+        run: npm run build
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.ATTENDANCE_GCP_CREDENTIALS }}'
+      - id: 'deploy'
+        uses: 'google-github-actions/deploy-cloud-functions@v1'
+        with:
+          name: '${{ vars.ATTENDANCE_CLOUD_FUNCTION_NAME }}'
+          source_dir: 'dist/attendance.js'
+          entry_point: 'attendance'
+          runtime: 'nodejs16'
