@@ -13,7 +13,7 @@ for (const botFolderPath of glob.sync(`${BOTS_FOLDER}/*`)) {
     rollupConfig.push({
         input: path.join(botFolderPath, `${botName}.js`),
         output: {
-            file: path.join(DIST_FOLDER, `${botName}.js`),
+            file: path.join(DIST_FOLDER, botName, 'index.js'),
             format: 'cjs',
             strict: false,
         },
