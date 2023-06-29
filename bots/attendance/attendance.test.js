@@ -46,17 +46,20 @@ describe('Attendance', () => {
             });
         });
 
-        it.each(['o', 'O', '0', 'v', 'V'])('display ✅ for command indicating that user is present', (command) => {
-            request.body.message.text += `xx${command}xx`;
-            attendance(request, response);
+        it.each(['o', 'O', '0', 'v', 'V', '✅'])(
+            'display ✅  for command indicating that user is present',
+            (command) => {
+                request.body.message.text += `xx${command}xx`;
+                attendance(request, response);
 
-            expect(response.send).toHaveBeenCalledWith({
-                text: 'John Doe : ❌ | ❌ | ✅ | ❌ | ❌',
-            });
-        });
+                expect(response.send).toHaveBeenCalledWith({
+                    text: 'John Doe : ❌ | ❌ | ✅ | ❌ | ❌',
+                });
+            },
+        );
 
         it.each([...'azertyuip^$qsdfghjklmù*wxcbn,;:!123456789'])(
-            'display ❌ by default for any unknown command "%s"',
+            'display ❌  by default for any unknown command "%s"',
             (command) => {
                 request.body.message.text += `oo${command}oo`;
                 attendance(request, response);
@@ -113,7 +116,7 @@ describe('Attendance', () => {
             });
         });
 
-        describe('display additional ❌ for partial command', () => {
+        describe('display additional ❌  for partial command', () => {
             it('when missing four last characters', () => {
                 request.body.message.text += 'o';
                 attendance(request, response);
@@ -160,7 +163,7 @@ describe('Attendance', () => {
             });
         });
 
-        it(`display ❓ for command indicating that user doesn't know if present or not`, () => {
+        it(`display ❓  for command indicating that user doesn't know if present or not`, () => {
             request.body.message.text += '?';
             attendance(request, response);
 
@@ -175,6 +178,24 @@ describe('Attendance', () => {
 
             expect(response.send).toHaveBeenCalledWith({
                 text: 'John Doe : ❌ | ✅ | ❌ | ❓ | ❌',
+            });
+        });
+
+        it('display proper message when command and arguments are separated by multiple white spaces', () => {
+            request.body.message.text += `    oxoxo`;
+            attendance(request, response);
+
+            expect(response.send).toHaveBeenCalledWith({
+                text: 'John Doe : ✅ | ❌ | ✅ | ❌ | ✅',
+            });
+        });
+
+        it('display error message when command is not known', () => {
+            request.body.message.text = 'toto oxoxo';
+            attendance(request, response);
+
+            expect(response.send).toHaveBeenCalledWith({
+                text: 'John Doe : Unknown command "toto"',
             });
         });
     });
