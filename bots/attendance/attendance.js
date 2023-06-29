@@ -18,6 +18,13 @@ module.exports = function attendance(request, response) {
     response.send(data);
 };
 
+const ATTENDANCE_LABEL_MAPPINGS = [
+    { keys: 'oO0vV✅', label: '✅' },
+    { keys: '?', label: '❓' },
+];
+
+const FALLBACK_LABEL = '❌';
+
 /**
  * Creates a card with two widgets.
  * @param {string} message the sender's message.
@@ -25,33 +32,29 @@ module.exports = function attendance(request, response) {
  * @return {Object} a card with the user's avatar.
  */
 function createMessage(message, sender) {
-    const user = `${sender} : `;
-    const result = user + compute(message);
+    const commandResult = interpretMessage(message);
 
-    return { text: result };
+    const messageTest = `${sender} : ${commandResult}`;
+    return { text: messageTest };
 }
 
-function compute(infoAttendance) {
-    const attendance = infoAttendance.replace('@attendance-chatbot ', '').replace('/attendance ', '');
-    let pos = 0;
-    const s = toto(attendance.charAt(pos++));
-    const s1 = toto(attendance.charAt(pos++));
-    const s2 = toto(attendance.charAt(pos++));
-    const s3 = toto(attendance.charAt(pos++));
-    const s4 = toto(attendance.charAt(pos++));
-    return `${s} | ${s1} | ${s2} | ${s3} | ${s4}`;
+function interpretMessage(inputMessage) {
+    const statements = inputMessage.split(/\s+/);
+    const [command, commandArguments] = statements;
+
+    return isAttendanceCommand(command) ? displayAttendanceWorkWeek(commandArguments) : `Unknown command "${command}"`;
 }
 
-function isPresent(attendanceElement) {
-    return (
-        attendanceElement === 'o' ||
-        attendanceElement === 'O' ||
-        attendanceElement === '0' ||
-        attendanceElement === 'v' ||
-        attendanceElement === 'V'
-    );
+function isAttendanceCommand(command) {
+    return ['@attendance-chatbot', '/attendance'].includes(command);
 }
 
-function toto(attendanceElement) {
-    return isPresent(attendanceElement) ? '✅' : attendanceElement === '?' ? '❓' : '❌';
+function displayAttendanceWorkWeek(attendance) {
+    // eslint-disable-next-line unicorn/no-useless-spread
+    return [...attendance.padEnd(5, 'x').slice(0, 5)].map((item) => singleLabelForChar(item)).join(' | ');
+}
+
+function singleLabelForChar(attendanceElement) {
+    const mapping = ATTENDANCE_LABEL_MAPPINGS.find(({ keys }) => keys.includes(attendanceElement));
+    return (mapping && mapping.label) || FALLBACK_LABEL;
 }
