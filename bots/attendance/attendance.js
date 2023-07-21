@@ -39,8 +39,7 @@ function createMessage(message, sender) {
 }
 
 function interpretMessage(inputMessage) {
-    const statements = inputMessage.split(/\s+/);
-    const [command, commandArguments] = statements;
+    const [command, commandArguments] = inputMessage.split(/\s+/);
 
     return isAttendanceCommand(command) ? displayAttendanceWorkWeek(commandArguments) : `Unknown command "${command}"`;
 }
