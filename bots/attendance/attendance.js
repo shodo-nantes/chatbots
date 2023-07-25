@@ -47,6 +47,7 @@ const ATTENDANCE_LABEL_MAPPINGS = [
     { keys: 'oO0vV✅', label: '✅' },
     { keys: '?❓', label: '❓' },
     { keys: 'rR🏠', label: '🏠' },
+    { keys: 'cC💼', label: '💼' },
 ];
 
 const FALLBACK_LABEL = '❌';

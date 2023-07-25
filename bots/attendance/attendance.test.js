@@ -59,7 +59,7 @@ describe('Attendance', () => {
             },
         );
 
-        it.each([...'azetyuip^$qsdfghjklmù*wxcbn,;:!123456789'])(
+        it.each([...'azetyuip^$qsdfghjklmù*wxbn,;:!123456789'])(
             'display ❌  by default for any unknown command "%s"',
             (command) => {
                 request.body.message.text += `oo${command}oo`;
@@ -182,6 +182,15 @@ describe('Attendance', () => {
 
             expect(response.send).toHaveBeenCalledWith({
                 text: 'John Doe : ❌ | ❌ | 🏠 | ❌ | ❌',
+            });
+        });
+
+        it.each(['c', 'C', '💼'])(`display 💼 for command %s indicating that user works from home`, (command) => {
+            request.body.message.text += `xx${command}xx`;
+            attendance(request, response);
+
+            expect(response.send).toHaveBeenCalledWith({
+                text: 'John Doe : ❌ | ❌ | 💼 | ❌ | ❌',
             });
         });
 
