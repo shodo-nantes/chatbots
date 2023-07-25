@@ -95,9 +95,19 @@ function displaySenderWithAttendance(sender, commandArguments) {
     return `${sender} : ${displayAttendanceWorkWeek(commandArguments)}`;
 }
 
+function parseToWorkweek(attendance) {
+    const [
+        monday = FALLBACK_LABEL,
+        tuesday = FALLBACK_LABEL,
+        wednesday = FALLBACK_LABEL,
+        thursday = FALLBACK_LABEL,
+        friday = FALLBACK_LABEL,
+    ] = [...attendance];
+    return [monday, tuesday, wednesday, thursday, friday];
+}
+
 function displayAttendanceWorkWeek(attendance) {
-    return [...attendance.padEnd(5, 'x')]
-        .slice(0, 5)
+    return parseToWorkweek(attendance)
         .map((item) => singleLabelForChar(item))
         .join(' | ');
 }

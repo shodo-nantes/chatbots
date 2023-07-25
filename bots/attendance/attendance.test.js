@@ -118,12 +118,12 @@ describe('Attendance', () => {
         });
 
         describe('display additional ❌  for partial command', () => {
-            it('when missing four last characters', () => {
-                request.body.message.text += 'o';
+            it.each([...'ov✅🏠❓💼'])('when missing four last characters for command %s', (command) => {
+                request.body.message.text += command;
                 attendance(request, response);
 
                 expect(response.send).toHaveBeenCalledWith({
-                    text: 'John Doe : ✅ | ❌ | ❌ | ❌ | ❌',
+                    text: expect.stringContaining(' | ❌ | ❌ | ❌ | ❌'),
                 });
             });
 
