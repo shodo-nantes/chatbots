@@ -45,7 +45,7 @@ Arguments de la commande:
 
 const ATTENDANCE_LABEL_MAPPINGS = [
     { keys: 'oO0vV✅', label: '✅' },
-    { keys: '?', label: '❓' },
+    { keys: '?❓', label: '❓' },
 ];
 
 const FALLBACK_LABEL = '❌';

@@ -164,14 +164,17 @@ describe('Attendance', () => {
             });
         });
 
-        it(`display ❓  for command indicating that user doesn't know if present or not`, () => {
-            request.body.message.text += '?';
-            attendance(request, response);
+        it.each(['?', '❓'])(
+            `display ❓  for command indicating that user doesn't know if present or not`,
+            (command) => {
+                request.body.message.text += `xx${command}xx`;
+                attendance(request, response);
 
-            expect(response.send).toHaveBeenCalledWith({
-                text: 'John Doe : ❓ | ❌ | ❌ | ❌ | ❌',
-            });
-        });
+                expect(response.send).toHaveBeenCalledWith({
+                    text: 'John Doe : ❌ | ❌ | ❓ | ❌ | ❌',
+                });
+            },
+        );
 
         it.each(['@attendance-chatbot', '/attendance'])('triggers command for %s command prefix', (commandPrefix) => {
             request.body.message.text = `${commandPrefix} xox?x`;
