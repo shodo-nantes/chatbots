@@ -46,6 +46,7 @@ Arguments de la commande:
 const ATTENDANCE_LABEL_MAPPINGS = [
     { keys: 'oO0vV✅', label: '✅' },
     { keys: '?❓', label: '❓' },
+    { keys: 'rR🏠', label: '🏠' },
 ];
 
 const FALLBACK_LABEL = '❌';
@@ -94,8 +95,10 @@ function displaySenderWithAttendance(sender, commandArguments) {
 }
 
 function displayAttendanceWorkWeek(attendance) {
-    // eslint-disable-next-line unicorn/no-useless-spread
-    return [...attendance.padEnd(5, 'x').slice(0, 5)].map((item) => singleLabelForChar(item)).join(' | ');
+    return [...attendance.padEnd(5, 'x')]
+        .slice(0, 5)
+        .map((item) => singleLabelForChar(item))
+        .join(' | ');
 }
 
 function singleLabelForChar(attendanceElement) {

@@ -59,7 +59,7 @@ describe('Attendance', () => {
             },
         );
 
-        it.each([...'azertyuip^$qsdfghjklmù*wxcbn,;:!123456789'])(
+        it.each([...'azetyuip^$qsdfghjklmù*wxcbn,;:!123456789'])(
             'display ❌  by default for any unknown command "%s"',
             (command) => {
                 request.body.message.text += `oo${command}oo`;
@@ -175,6 +175,15 @@ describe('Attendance', () => {
                 });
             },
         );
+
+        it.each(['r', 'R', '🏠'])(`display 🏠 for command %s indicating that user works from home`, (command) => {
+            request.body.message.text += `xx${command}xx`;
+            attendance(request, response);
+
+            expect(response.send).toHaveBeenCalledWith({
+                text: 'John Doe : ❌ | ❌ | 🏠 | ❌ | ❌',
+            });
+        });
 
         it.each(['@attendance-chatbot', '/attendance'])('triggers command for %s command prefix', (commandPrefix) => {
             request.body.message.text = `${commandPrefix} xox?x`;
