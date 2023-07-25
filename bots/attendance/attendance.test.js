@@ -1,5 +1,6 @@
 const attendance = require('./attendance');
 
+const ATTENDANCE_COMMAND = '@attendance-chatbot';
 describe('Attendance', () => {
     it('when the request method is GET then should return a greeting message', () => {
         const request = { method: 'GET' };
@@ -19,7 +20,7 @@ describe('Attendance', () => {
                 method: 'POST',
                 body: {
                     message: {
-                        text: '@attendance-chatbot ',
+                        text: `${ATTENDANCE_COMMAND} `,
                         sender: {
                             displayName: 'John Doe',
                         },
@@ -195,8 +196,74 @@ describe('Attendance', () => {
             attendance(request, response);
 
             expect(response.send).toHaveBeenCalledWith({
-                text: 'John Doe : Unknown command "toto"',
+                text: 'Unknown command "toto"',
             });
         });
+    });
+
+    describe('help', () => {
+        let request;
+        let response;
+
+        beforeEach(() => {
+            request = {
+                method: 'POST',
+                body: {
+                    message: {
+                        text: `${ATTENDANCE_COMMAND} `,
+                        sender: {
+                            displayName: 'John Doe',
+                        },
+                    },
+                },
+            };
+            response = { send: jest.fn() };
+        });
+
+        it('print whole help message', () => {
+            request.body.message.text = `${ATTENDANCE_COMMAND} help`;
+
+            attendance(request, response);
+
+            expect(response.send).toHaveBeenCalledWith({
+                text: `Usage: @attendance-chatbot [-h|--help|help] jours_de_la_semaine
+Ce bot retranscrit les "jours de la semaine" renseignés par une personne dans le canal, et les affiche dans un format visuellement plus sympa (avec des emojis).L'objectif initial étant de pouvoir dénombrer les personnes présentes dans les locaux de Shodo pour s'organiser en conséquence.Actuellement les informations données au bot ne sont ni stockage, ni synthétisées.
+
+Arguments de la commande:
+
+    [-h|--help|help] : argument optionnel permettant d'afficher le présent texte.
+
+    jours_de_la_semaine : argument de 5 caractères à donner au bot, permettant de décrire sa semaine aux autres Shodoers et Shodoeuses.
+    Liste des symboles proposés par le bot : 
+    - ✅ Présent•e (dans les locaux).
+        Symboles : "o", "O", "0", "v", "V" ou "✅" 
+    - ❌ Absent•e (des locaux et ne présage pas d'un autre type d'absence)
+        Symboles : "x" et "par défaut" tout symbole non supporté par ailleurs
+    - ❓ Je ne sais pas
+        Symboles : "?", "❓"
+    - 🏠 En remote (travaille depuis chez soi).
+        Symboles : "r", "R", "🏠"
+    - 💼 En clientèle (présentiel chez le client).
+        Symboles : "c", "C", "💼"
+    - 🏝️ Holidays (en été) (vacances, mais le "v" est déjà pris).
+        Symboles : "h", "H", "🏝️"
+    - 🎿 Holidays (en hiver) (vacances, mais le "v" est déjà pris).
+        Symboles : "h", "H", "🎿"
+`,
+            });
+        });
+
+        it.each(['help', '-h', '--help'])(
+            'display help message when contains attendance and help flag %s',
+            (helpFlag) => {
+                request.body.message.text = `${ATTENDANCE_COMMAND} oxoxo ${helpFlag}`;
+
+                attendance(request, response);
+
+                expect(response.send).toHaveBeenCalledWith({
+                    text: expect.stringContaining('Usage: @attendance-chatbot [-h|--help|help] jours_de_la_semaine'),
+                });
+            },
+        );
     });
 });
