@@ -59,7 +59,7 @@ describe('Attendance', () => {
             },
         );
 
-        it.each([...'azetyuip^$qsdfghjklmù*wxbn,;:!123456789'])(
+        it.each([...'azetyuip^$qsdfgjklmù*wxbn,;:!123456789'])(
             'display ❌  by default for any unknown command "%s"',
             (command) => {
                 request.body.message.text += `oo${command}oo`;
@@ -118,7 +118,8 @@ describe('Attendance', () => {
         });
 
         describe('display additional ❌  for partial command', () => {
-            it.each([...'ov✅🏠❓💼'])('when missing four last characters for command %s', (command) => {
+            // Ne pas oublier que [...🏝️] == ['🏝', '']
+            it.each([...'ov✅🏠❓💼🏝️', '🏝️'])('when missing four last characters for command %s', (command) => {
                 request.body.message.text += command;
                 attendance(request, response);
 
@@ -185,12 +186,23 @@ describe('Attendance', () => {
             });
         });
 
-        it.each(['c', 'C', '💼'])(`display 💼 for command %s indicating that user works from home`, (command) => {
+        it.each(['c', 'C', '💼'])(`display 💼 for command %s indicating that user works from client`, (command) => {
             request.body.message.text += `xx${command}xx`;
             attendance(request, response);
 
             expect(response.send).toHaveBeenCalledWith({
                 text: 'John Doe : ❌ | ❌ | 💼 | ❌ | ❌',
+            });
+        });
+
+        // Ne pas oublier que [...🏝️] == ['🏝', '']
+        // Ne pas oublier que '🏝️'.length == 3
+        it.each(['h', 'H', '🏝', '🏝️'])(`display 🏝️ for command %s indicating that user is in holidays`, (command) => {
+            request.body.message.text += `xx${command}xx`;
+            attendance(request, response);
+
+            expect(response.send).toHaveBeenCalledWith({
+                text: 'John Doe : ❌ | ❌ | 🏝️ | ❌ | ❌',
             });
         });
 

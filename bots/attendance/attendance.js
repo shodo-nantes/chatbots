@@ -43,15 +43,6 @@ Arguments de la commande:
         Symboles : "h", "H", "🎿"
 `;
 
-const ATTENDANCE_LABEL_MAPPINGS = [
-    { keys: 'oO0vV✅', label: '✅' },
-    { keys: '?❓', label: '❓' },
-    { keys: 'rR🏠', label: '🏠' },
-    { keys: 'cC💼', label: '💼' },
-];
-
-const FALLBACK_LABEL = '❌';
-
 const HELP_FLAGS = new Set(['help', '-h', '--help']);
 
 /**
@@ -95,24 +86,48 @@ function displaySenderWithAttendance(sender, commandArguments) {
     return `${sender} : ${displayAttendanceWorkWeek(commandArguments)}`;
 }
 
-function parseToWorkweek(attendance) {
-    const [
-        monday = FALLBACK_LABEL,
-        tuesday = FALLBACK_LABEL,
-        wednesday = FALLBACK_LABEL,
-        thursday = FALLBACK_LABEL,
-        friday = FALLBACK_LABEL,
-    ] = [...attendance];
-    return [monday, tuesday, wednesday, thursday, friday];
+function regexOf(c) {
+    const join = c.join('|');
+    return new RegExp(`(${join})`, 'gu');
 }
 
+function attendanceTypeFrom(
+    supportedSymbols = [],
+    normalized = supportedSymbols[0],
+    label = supportedSymbols[supportedSymbols.length - 1],
+) {
+    return {
+        normalized,
+        label,
+        supportedSymbolsRegex: () => regexOf(supportedSymbols),
+    };
+}
+
+const ATTENDANCE_TYPES = [
+    attendanceTypeFrom(['o', 'O', '0', 'v', 'V', '✅']),
+    attendanceTypeFrom(['\\?', '❓'], '?'),
+    attendanceTypeFrom(['r', 'R', '🏠']),
+    attendanceTypeFrom(['c', 'C', '💼']),
+    attendanceTypeFrom(['h', 'H', '🏝', '🏝️']),
+];
+
+const FALLBACK = {
+    label: '❌',
+    normalized: 'x',
+};
+
+function parseWorkweek(initialAttendance) {
+    let normalizeds = initialAttendance;
+    for (const attendanceType of ATTENDANCE_TYPES) {
+        normalizeds = normalizeds.replaceAll(attendanceType.supportedSymbolsRegex(), attendanceType.normalized);
+    }
+    normalizeds = normalizeds.padEnd(5, 'x');
+    return [...normalizeds].splice(0, 5).map((day) => {
+        const mapping = ATTENDANCE_TYPES.find(({ normalized }) => normalized === day);
+        return mapping || FALLBACK;
+    });
+}
 function displayAttendanceWorkWeek(attendance) {
-    return parseToWorkweek(attendance)
-        .map((item) => singleLabelForChar(item))
-        .join(' | ');
-}
-
-function singleLabelForChar(attendanceElement) {
-    const mapping = ATTENDANCE_LABEL_MAPPINGS.find(({ keys }) => keys.includes(attendanceElement));
-    return (mapping && mapping.label) || FALLBACK_LABEL;
+    const workweek = parseWorkweek(attendance);
+    return workweek.map((attendanceType) => attendanceType.label).join(' | ');
 }
