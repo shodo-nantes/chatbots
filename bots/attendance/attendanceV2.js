@@ -24,7 +24,7 @@ app.event('app_home_opened', async ({ event, say }) => {
 
 const userAttendances = [];
 let emojiResponse = [];
-const weekResponse = {}; // Changed to an object for aggregation
+const weekResponse = {}; 
 const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
 
 // Initialize weekResponse with 0 counts for each day
@@ -32,7 +32,7 @@ days.forEach((day) => {
     weekResponse[day] = 0;
 });
 
-// Function to update user attendance
+
 function updateUserAttendance(userId, textAfterCommand) {
     if (!userAttendances[userId]) {
         userAttendances[userId] = [];
@@ -48,11 +48,11 @@ function generateEmojiResponse(textAfterCommand) {
     for (let i = 0; i < textAfterCommand.length; i++) {
         const char = textAfterCommand[i];
         if (char === 'v') {
-            emojiArray.push("✅");
+            emojiArray.push('✅');
         } else if (char === 'x') {
-            emojiArray.push("❌");
+            emojiArray.push('❌');
         } else {
-            emojiArray.push("❓");
+            emojiArray.push('❓');
         }
     }
 
