@@ -1,5 +1,4 @@
 const { App } = require('@slack/bolt');
-const { WebClient } = require('@slack/web-api');
 require('dotenv').config();
 
 const handleAppHomeOpened = require('./helloWorld');
