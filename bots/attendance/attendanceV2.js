@@ -50,22 +50,27 @@ function generateEmojiResponse(textAfterCommand) {
 function generateWeekResponse() {
     // Reset weekResponse counts to 0
     for (const day of days) {
-        weekResponse[day] = { v: 0, '?': 0 };
+        weekResponse[day] = { 'v': 0, '?': 0 };
     }
+
     Object.keys(userAttendances).forEach((userId) => {
         const userAttendance = userAttendances[userId];
         days.forEach((day, index) => {
             userAttendance.forEach((attendance) => {
-                if (attendance[index] === 'v') {
-                    weekResponse[day]['v']++; // Increment the "v" count for the day
-                } else if (attendance[index] === '?') {
-                    weekResponse[day]['?']++; // Increment the "?" count for the day
-                } else if (attendance[index] === 'x') {
-                    return; // Exit the loop if there's an absence
+                switch (attendance[index]) {
+                    case 'v':
+                        weekResponse[day]['v']++; // Increment the "v" count for the day
+                        break;
+                    case '?':
+                        weekResponse[day]['?']++; // Increment the "?" count for the day
+                        break;
+                    case 'x':
+                        return; // Exit the loop if there's an absence
                 }
             });
         });
     });
+
 
     // Create the weekResponse string
     const weekResponseArray = days.map((day) => {
