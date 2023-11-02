@@ -47,7 +47,6 @@ function generateEmojiResponse(textAfterCommand) {
     return emojiArray.join('');
 }
 
-// Function to generate the response with the days of the week
 function generateWeekResponse() {
     // Reset weekResponse counts to 0
     for (const day of days) {
