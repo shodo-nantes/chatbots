@@ -45,7 +45,6 @@ function generateEmojiResponse(textAfterCommand) {
             emojiArray.push('❓');
         }
     }
-    
     const attendanceEmoji = emojiArray.join('');
     return attendanceEmoji;
 }
