@@ -14,7 +14,7 @@ const currentMessage = null;
 // Event to handle 'app_home_opened' using the imported function
 app.event('app_home_opened', async ({ event, say }) => {
     handleAppHomeOpened({ event, say, app, currentMessage });
-})
+});
 const userAttendances = [];
 let emojiResponse = [];
 const weekResponse = {}; 
