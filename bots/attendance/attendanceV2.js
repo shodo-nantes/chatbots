@@ -9,7 +9,6 @@ const app = new App({
 });
 
 app.start(process.env.PORT || 3000);
-console.log('Hello World! The chatbot is online!')
 let currentMessage = null;
 
 // Event to handle 'app_home_opened' using the imported function
