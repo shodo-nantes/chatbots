@@ -9,7 +9,7 @@ const app = new App({
 });
 
 app.start(process.env.PORT || 3000);
-    console.log('Hello World! The chatbot is online!');
+console.log('Hello World! The chatbot is online!');
 
 
 let currentMessage = null;
