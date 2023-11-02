@@ -50,10 +50,10 @@ function generateEmojiResponse(textAfterCommand) {
 // Function to generate the response with the days of the week
 function generateWeekResponse() {
     // Reset weekResponse counts to 0
-    days.forEach((day) => {
+    for (const day of days) {
         weekResponse[day] = { 'v': 0, '?': 0 };
-    });
-
+    }
+    
     Object.keys(userAttendances).forEach((userId) => {
         const userAttendance = userAttendances[userId];
         days.forEach((day, i) => {
