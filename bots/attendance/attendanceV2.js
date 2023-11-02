@@ -44,7 +44,6 @@ function generateEmojiResponse(textAfterCommand) {
             emojiArray.push('❓');
         }
     }
-    
     return emojiArray.join('');
 }
 
