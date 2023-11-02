@@ -17,7 +17,7 @@ app.event('app_home_opened', async ({ event, say }) => {
 });
 const userAttendances = [];
 const emojiResponse = [];
-const weekResponse = {}; 
+const weekResponse = {} 
 const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
 
 // Initialize weekResponse with 0 counts for each day
