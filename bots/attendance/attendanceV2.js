@@ -55,13 +55,13 @@ function generateWeekResponse() {
     }
     Object.keys(userAttendances).forEach((userId) => {
         const userAttendance = userAttendances[userId];
-        days.forEach((day, i) => {
+        days.forEach((day, index) => {
             userAttendance.forEach((attendance) => {
-                if (attendance[i] === 'v') {
+                if (attendance[index] === 'v') {
                     weekResponse[day]['v']++; // Increment the "v" count for the day
-                } else if (attendance[i] === '?') {
+                } else if (attendance[index] === '?') {
                     weekResponse[day]['?']++; // Increment the "?" count for the day
-                } else if (attendance[i] === 'x') {
+                } else if (attendance[index] === 'x') {
                     return; // Exit the loop if there's an absence
                 }
             });
