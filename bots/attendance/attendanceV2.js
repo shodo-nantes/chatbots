@@ -53,7 +53,6 @@ function generateWeekResponse() {
     for (const day of days) {
         weekResponse[day] = { v: 0, '?': 0 };
     }
-    
     Object.keys(userAttendances).forEach((userId) => {
         const userAttendance = userAttendances[userId];
         days.forEach((day, i) => {
