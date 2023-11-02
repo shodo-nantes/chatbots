@@ -21,9 +21,9 @@ const weekResponse = [];
 const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
 
 // Initialize weekResponse with 0 counts for each day
-days.forEach((day) => {
+for (const day of days) {
     weekResponse[day] = 0;
-});
+}
 
 
 function updateUserAttendance(userId, textAfterCommand) {
