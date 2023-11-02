@@ -187,8 +187,6 @@ app.command('/attendance', async ({ ack, body, client }) => {
     });
 });
 
-
-
 //NEW WEEK
 app.command('/newweek', async ({ ack, client }) => {
     await ack();
