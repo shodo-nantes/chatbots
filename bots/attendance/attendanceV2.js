@@ -36,8 +36,7 @@ function updateUserAttendance(userId, textAfterCommand) {
 function generateEmojiResponse(textAfterCommand) {
     const emojiArray = [];
 
-    for (let i = 0; i < textAfterCommand.length; i++) {
-        const char = textAfterCommand[i];
+    for (const char of textAfterCommand) {
         if (char === 'v') {
             emojiArray.push('✅');
         } else if (char === 'x') {
@@ -46,7 +45,7 @@ function generateEmojiResponse(textAfterCommand) {
             emojiArray.push('❓');
         }
     }
-
+    
     const attendanceEmoji = emojiArray.join('');
     return attendanceEmoji;
 }
