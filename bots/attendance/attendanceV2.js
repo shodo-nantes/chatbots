@@ -16,7 +16,7 @@ app.event('app_home_opened', async ({ event, say }) => {
     handleAppHomeOpened({ event, say, app, currentMessage });
 });
 const userAttendances = [];
-let emojiResponse = [];
+const emojiResponse = [];
 const weekResponse = {}; 
 const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
 
