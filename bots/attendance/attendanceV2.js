@@ -68,7 +68,7 @@ function generateWeekResponse() {
                         return; // Exit the loop if there's an absence
                 }
             });
-                    });
+        });
     });
 
 
