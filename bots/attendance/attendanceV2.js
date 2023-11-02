@@ -71,7 +71,6 @@ function generateWeekResponse() {
         });
     });
 
-
     // Create the weekResponse string
     const weekResponseArray = days.map((day) => {
         const vCount = weekResponse[day]['v'];
