@@ -109,7 +109,6 @@ async function deleteMessagesForCurrentWeek(client) {
             }
         }
     }
-
 }
 
 // Event to handle the '/attendance' command
