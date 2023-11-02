@@ -9,7 +9,7 @@ const app = new App({
 });
 
 app.start(process.env.PORT || 3000);
-let currentMessage = null;
+const currentMessage = null;
 
 // Event to handle 'app_home_opened' using the imported function
 app.event('app_home_opened', async ({ event, say }) => {
