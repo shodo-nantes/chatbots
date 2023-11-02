@@ -8,10 +8,9 @@ const app = new App({
     signingSecret: process.env.SLACK_SIGNING_SECRET,
 });
 
-(async () => {
-    await app.start(process.env.PORT || 3000);
+app.start(process.env.PORT || 3000);
     console.log('Hello World! The chatbot is online!');
-})();
+
 
 let currentMessage = null;
 
