@@ -24,8 +24,6 @@ const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
 for (const day of days) {
     weekResponse[day] = 0;
 }
-
-
 function updateUserAttendance(userId, textAfterCommand) {
     if (!userAttendances[userId]) {
         userAttendances[userId] = [];
