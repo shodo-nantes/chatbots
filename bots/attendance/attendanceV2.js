@@ -32,7 +32,6 @@ function updateUserAttendance(userId, textAfterCommand) {
     userAttendances[userId].push(textAfterCommand);
 }
 
-// Function to generate emoji response
 function generateEmojiResponse(textAfterCommand) {
     const emojiArray = [];
 
@@ -45,8 +44,8 @@ function generateEmojiResponse(textAfterCommand) {
             emojiArray.push('❓');
         }
     }
-    const attendanceEmoji = emojiArray.join('');
-    return attendanceEmoji;
+    
+    return emojiArray.join('');
 }
 
 // Function to generate the response with the days of the week
