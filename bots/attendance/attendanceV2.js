@@ -1,6 +1,8 @@
 const { App } = require('@slack/bolt');
 require('dotenv').config();
 
+const handleAppHomeOpened = require('./helloWorld');
+
 const app = new App({
     token: process.env.SLACK_BOT_TOKEN,
     signingSecret: process.env.SLACK_SIGNING_SECRET,
@@ -22,6 +24,7 @@ const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
 for (const day of days) {
     weekResponse[day] = 0;
 }
+
 function updateUserAttendance(userId, textAfterCommand) {
     if (!userAttendances[userId]) {
         userAttendances[userId] = [];
@@ -45,10 +48,23 @@ function generateEmojiResponse(textAfterCommand) {
     return emojiArray.join('');
 }
 
+function generateWeekResponseString(day, vCount, qCount) {
+    let response = `${day}: ${vCount}`;
+    if (qCount) {
+        response += ` (ou `;
+        if (qCount > 1) {
+            response += ' ';
+        }
+        response += `${vCount + qCount}`;
+        response += ')';
+    }
+    return response;
+}
+
 function generateWeekResponse() {
     // Reset weekResponse counts to 0
     for (const day of days) {
-        weekResponse[day] = { v: 0, '?': 0 };
+        weekResponse[day] = { 'v': 0, '?': 0 };
     }
 
     Object.keys(userAttendances).forEach((userId) => {
@@ -73,7 +89,7 @@ function generateWeekResponse() {
     const weekResponseArray = days.map((day) => {
         const vCount = weekResponse[day]['v'];
         const qCount = weekResponse[day]['?'];
-        return `${day}: ${vCount}${qCount ? ` (ou ${qCount > 1 ? ' ' : ''}${vCount + qCount})` : ''}`;
+        return generateWeekResponseString(day, vCount, qCount);
     });
 
     return weekResponseArray.join('\n');
