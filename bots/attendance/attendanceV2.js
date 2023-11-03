@@ -1,8 +1,6 @@
 const { App } = require('@slack/bolt');
 require('dotenv').config();
 
-const handleAppHomeOpened = require('./helloWorld');
-
 const app = new App({
     token: process.env.SLACK_BOT_TOKEN,
     signingSecret: process.env.SLACK_SIGNING_SECRET,
@@ -11,10 +9,6 @@ const app = new App({
 app.start(process.env.PORT || 3000);
 const currentMessage = null;
 
-// Event to handle 'app_home_opened' using the imported function
-app.event('app_home_opened', async ({ event, say }) => {
-    handleAppHomeOpened({ event, say, app, currentMessage });
-});
 const userAttendances = [];
 const emojiResponse = [];
 const weekResponse = [];
