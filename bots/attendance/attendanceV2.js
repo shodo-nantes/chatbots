@@ -144,7 +144,7 @@ app.command('/attendance', async ({ ack, body, client }) => {
     emojiResponse.push(`${userName} ${userLastName} : ${userResponse}`);
 
     let allResponses = '';
-    emojiResponse.forEach(element => {
+    emojiResponse.forEach((element) => {
         allResponses += `${element}\n`;
     });
 
