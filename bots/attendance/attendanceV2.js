@@ -85,8 +85,7 @@ function generateWeekResponse() {
 async function deleteMessagesForCurrentWeek(client) {
     // Calcola la data di inizio della settimana precedente (venerdì)
     const startDate = new Date();
-    startDate.setDate(startDate.getDate() - (startDate.getDay() + 2) % 7 - 7); // Venerdì della settimana precedente
-
+    startDate.setDate(startDate.getDate() - (startDate.getDay() + 2) % 7 - 7);
     // Calcola la data di fine della settimana precedente (giovedì)
     const endDate = new Date(startDate);
     endDate.setDate(endDate.getDate() + 7); // Giovedì della settimana precedente
