@@ -7,8 +7,6 @@ const app = new App({
 });
 
 app.start(process.env.PORT || 3000);
-const currentMessage = null;
-
 const userAttendances = [];
 const emojiResponse = [];
 const weekResponse = [];
