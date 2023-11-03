@@ -104,7 +104,8 @@ async function deleteMessagesForCurrentWeek(client) {
         if (message.ts) {
             const messageDate = new Date(parseFloat(message.ts) * 1000);
             if (messageDate >= startDate && messageDate <= endDate) {
-                lastWeekLastMessage = message; // Mantieni l'ultimo messaggio della settimana precedente
+// Mantieni l'ultimo messaggio della settimana precedente
+                lastWeekLastMessage = message; 
             }
         }
     }
