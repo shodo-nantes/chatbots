@@ -102,7 +102,7 @@ async function deleteMessagesForCurrentWeek(client) {
     // Loop attraverso i messaggi e trova l'ultimo messaggio della settimana precedente
     for (const message of channelHistory.messages) {
         if (message.ts) {
-            const messageDate = new Date(parseFloat(message.ts) * 1000);
+            const messageDate = new Date(Number.parseFloat(message.ts) * 1000);
             if (messageDate >= startDate && messageDate <= endDate) {
                 lastWeekLastMessage = message; // Mantieni l'ultimo messaggio della settimana precedente
             }
