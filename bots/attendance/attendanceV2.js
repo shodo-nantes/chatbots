@@ -64,7 +64,7 @@ function generateWeekResponseString(day, vCount, qCount) {
 function generateWeekResponse() {
     // Reset weekResponse counts to 0
     for (const day of days) {
-        weekResponse[day] = { 'v': 0, '?': 0 };
+        weekResponse[day] = { v: 0, '?': 0 };
     }
 
     Object.keys(userAttendances).forEach((userId) => {
