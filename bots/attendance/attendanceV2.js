@@ -108,7 +108,8 @@ async function deleteMessagesForCurrentWeek(client) {
             }
         }
     }
-    
+}
+
 // Event to handle the '/attendance' command
 app.command('/attendance', async ({ ack, body, client }) => {
     await ack();
