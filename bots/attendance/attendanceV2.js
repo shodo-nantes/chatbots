@@ -104,9 +104,9 @@ async function deleteMessagesForCurrentWeek(client) {
         if (message.ts) {
             const messageDate = new Date(parseFloat(message.ts) * 1000);
             if (messageDate >= startDate && messageDate <= endDate) {
-    /* eslint-disable no-unused-vars */
-    lastWeekLastMessage = message; // Mantieni l'ultimo messaggio della settimana precedente
-    /* eslint-enable no-unused-vars */
+           /* eslint-disable no-unused-vars */
+           lastWeekLastMessage = message; // Mantieni l'ultimo messaggio della settimana precedente
+           /* eslint-enable no-unused-vars */
             }
         }
     }
