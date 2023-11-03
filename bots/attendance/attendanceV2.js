@@ -181,7 +181,7 @@ app.command('/attendance', async ({ ack, body, client }) => {
     const weekResponseText = generateWeekResponse();
     await client.chat.postMessage({
         channel: 'C062C79CDRN',
-        text: message + '\n' + weekResponseText,
+        text: `${message}\n${weekResponseText}`,
     });
 });
 
