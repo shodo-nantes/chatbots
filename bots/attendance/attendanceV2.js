@@ -145,7 +145,7 @@ app.command('/attendance', async ({ ack, body, client }) => {
 
     let allResponses = '';
     emojiResponse.forEach(element => {
-        allResponses += element + '\n';
+        allResponses += `${element}\n`;
     });
 
     // Ottieni la lista dei messaggi nel canale
