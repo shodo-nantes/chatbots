@@ -107,12 +107,13 @@ app.command('/attendance', async ({ ack, body, client }) => {
         // Se l'utente ha già inserito un messaggio, cancellalo
         userAttendances[userId] = [];
 
-        // Rimuovi il primo messaggio con le emoji dall'array emojiResponse
-        if (emojiResponse.length > 0) {
-            emojiResponse.shift();
-        }
+    if (emojiResponse.length > 0) {
+        emojiResponse = emojiResponse.filter(
+          (message) => !message.startsWith(`${userName} ${userLastName}`)
+        );
+      }
     }
-
+  
     updateUserAttendance(userId, textAfterCommand);
 
     // Generate the emoji
