@@ -13,7 +13,6 @@ let emojiResponse = [];
 const weekResponse = [];
 const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
 
-// Initialize weekResponse with 0 counts for each day
 for (const day of days) {
     weekResponse[day] = 0;
 }
