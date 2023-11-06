@@ -54,7 +54,6 @@ function generateWeekResponseString(day, vCount, qCount) {
 }
 
 function generateWeekResponse() {
-    // Reset weekResponse counts to 0
     for (const day of days) {
         weekResponse[day] = { v: 0, '?': 0 };
     }
@@ -76,7 +75,6 @@ function generateWeekResponse() {
             }
         }
     }
-    // Create the weekResponse string
     const weekResponseArray = days.map((day) => {
         const vCount = weekResponse[day]['v'];
         const qCount = weekResponse[day]['?'];
@@ -86,7 +84,6 @@ function generateWeekResponse() {
     return weekResponseArray.join('\n');
 }
 
-// Event to handle the '/attendance' command
 app.command('/attendance', async ({ ack, body, client }) => {
     await ack();
 
@@ -97,15 +94,12 @@ app.command('/attendance', async ({ ack, body, client }) => {
         user: userId,
     });
 
-    // Extract the user's first and last name
     const userName = userInfo.user.profile.first_name;
     const userLastName = userInfo.user.profile.last_name;
 
     if (userAttendances[userId]) {
-        // Se l'utente ha già inserito un messaggio, cancellalo
         userAttendances[userId] = [];
 
-        // Rimuovi il primo messaggio con le emoji dall'array emojiResponse
         if (emojiResponse.length > 0) {
             emojiResponse = emojiResponse.filter((message) => !message.startsWith(`${userName} ${userLastName}`));
         }
@@ -113,7 +107,6 @@ app.command('/attendance', async ({ ack, body, client }) => {
 
     updateUserAttendance(userId, textAfterCommand);
 
-    // Generate the emoji
     const userResponse = generateEmojiResponse(textAfterCommand);
 
     emojiResponse.push(`${userName} ${userLastName} : ${userResponse}`);
@@ -123,27 +116,23 @@ app.command('/attendance', async ({ ack, body, client }) => {
         allResponses += `${element}\n`;
     }
 
-    // Ottieni la lista dei messaggi nel canale
     const channelHistory = await client.conversations.history({
         channel: 'C062C79CDRN',
     });
 
-    // Loop attraverso i messaggi e cancellali uno per uno
     for (const message of channelHistory.messages) {
         if (message.ts) {
-            // Verifica se il messaggio contiene l'etichetta speciale
             if (message.text && message.text.includes('[NEWWEEK]')) {
-                continue; // Ignora il messaggio
+                continue;
             }
 
             await client.chat.delete({
                 channel: 'C062C79CDRN',
-                ts: message.ts, // Timestamp del messaggio da cancellare
+                ts: message.ts,
             });
         }
     }
 
-    // Send a message that includes the user's name and the emoji
     const message = `${allResponses}`;
     const weekResponseText = generateWeekResponse();
     await client.chat.postMessage({
@@ -152,16 +141,14 @@ app.command('/attendance', async ({ ack, body, client }) => {
     });
 });
 
-//NEW WEEK
 app.command('/newweek', async ({ ack, client }) => {
     await ack();
 
     const today = new Date();
     const nextMonday = new Date(today);
-    nextMonday.setDate(today.getDate() + ((1 + 7 - today.getDay()) % 7)); // Lunedì della settimana successiva
+    nextMonday.setDate(today.getDate() + ((1 + 7 - today.getDay()) % 7));
     const nextFriday = new Date(nextMonday);
-    nextFriday.setDate(nextMonday.getDate() + 4); // Venerdì della settimana successiva
-
+    nextFriday.setDate(nextMonday.getDate() + 4);
     const formattedStartDate = nextMonday.toLocaleDateString('fr-FR', {
         day: 'numeric',
         month: 'numeric',
@@ -177,7 +164,7 @@ app.command('/newweek', async ({ ack, client }) => {
     const weekMessage = `Semaine du ${formattedStartDate} au ${formattedEndDate} [NEWWEEK]`;
 
     await client.chat.postMessage({
-        channel: 'C062C79CDRN', // Sostituisci con il tuo canale Slack
+        channel: 'C062C79CDRN',
         text: weekMessage,
     });
 });
