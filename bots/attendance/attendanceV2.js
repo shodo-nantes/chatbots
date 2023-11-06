@@ -1,195 +1,184 @@
-const { App } = require("@slack/bolt");
-require("dotenv").config();
+const { App } = require('@slack/bolt');
+require('dotenv').config();
 
 const app = new App({
-  token: process.env.SLACK_BOT_TOKEN,
-  signingSecret: process.env.SLACK_SIGNING_SECRET,
+    token: process.env.SLACK_BOT_TOKEN,
+    signingSecret: process.env.SLACK_SIGNING_SECRET,
 });
 
 app.start(process.env.PORT || 3000);
-const currentMessage = null;
 
 const userAttendances = [];
 let emojiResponse = [];
 const weekResponse = [];
-const days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
+const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
 
 // Initialize weekResponse with 0 counts for each day
 for (const day of days) {
-  weekResponse[day] = 0;
+    weekResponse[day] = 0;
 }
 
 function updateUserAttendance(userId, textAfterCommand) {
-  if (!userAttendances[userId]) {
-    userAttendances[userId] = [];
-  }
+    if (!userAttendances[userId]) {
+        userAttendances[userId] = [];
+    }
 
-  userAttendances[userId].push(textAfterCommand);
+    userAttendances[userId].push(textAfterCommand);
 }
 
 function generateEmojiResponse(textAfterCommand) {
-  const emojiArray = [];
+    const emojiArray = [];
 
-  for (const char of textAfterCommand) {
-    if (char === "v") {
-      emojiArray.push("✅");
-    } else if (char === "x") {
-      emojiArray.push("❌");
-    } else {
-      emojiArray.push("❓");
+    for (const char of textAfterCommand) {
+        if (char === 'v') {
+            emojiArray.push('✅');
+        } else if (char === 'x') {
+            emojiArray.push('❌');
+        } else {
+            emojiArray.push('❓');
+        }
     }
-  }
-  return emojiArray.join("");
+    return emojiArray.join('');
 }
 
 function generateWeekResponseString(day, vCount, qCount) {
-  let response = `${day}: ${vCount}`;
-  if (qCount) {
-    response += ` (ou `;
-    if (qCount > 1) {
-      response += " ";
+    let response = `${day}: ${vCount}`;
+    if (qCount) {
+        response += ` (ou `;
+        if (qCount > 1) {
+            response += ' ';
+        }
+        response += `${vCount + qCount}`;
+        response += ')';
     }
-    response += `${vCount + qCount}`;
-    response += ")";
-  }
-  return response;
+    return response;
 }
 
 function generateWeekResponse() {
-  // Reset weekResponse counts to 0
-  for (const day of days) {
-    weekResponse[day] = { v: 0, "?": 0 };
-  }
-
-  for (const userId of Object.keys(userAttendances)) {
-    const userAttendance = userAttendances[userId];
-    for (let index = 0; index < days.length; index++) {
-      const day = days[index];
-      for (const attendance of userAttendance) {
-        switch (attendance[index]) {
-          case "v":
-            weekResponse[day]["v"]++;
-            break;
-          case "?":
-            weekResponse[day]["?"]++;
-            break;
-        }
-      }
+    // Reset weekResponse counts to 0
+    for (const day of days) {
+        weekResponse[day] = { v: 0, '?': 0 };
     }
-  }
-  // Create the weekResponse string
-  const weekResponseArray = days.map((day) => {
-    const vCount = weekResponse[day]["v"];
-    const qCount = weekResponse[day]["?"];
-    return generateWeekResponseString(day, vCount, qCount);
-  });
 
-  return weekResponseArray.join("\n");
+    for (const userId of Object.keys(userAttendances)) {
+        const userAttendance = userAttendances[userId];
+        for (const [index, day] of days.entries()) {
+            for (const attendance of userAttendance) {
+                switch (attendance[index]) {
+                    case 'v': {
+                        weekResponse[day]['v']++;
+                        break;
+                    }
+                    case '?': {
+                        weekResponse[day]['?']++;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    // Create the weekResponse string
+    const weekResponseArray = days.map((day) => {
+        const vCount = weekResponse[day]['v'];
+        const qCount = weekResponse[day]['?'];
+        return generateWeekResponseString(day, vCount, qCount);
+    });
+
+    return weekResponseArray.join('\n');
 }
 
 // Event to handle the '/attendance' command
-app.command("/attendance", async ({ ack, body, client }) => {
-  await ack();
+app.command('/attendance', async ({ ack, body, client }) => {
+    await ack();
 
-  const textAfterCommand = body.text;
-  const userId = body.user_id;
+    const textAfterCommand = body.text;
+    const userId = body.user_id;
 
-  const userInfo = await client.users.info({
-    user: userId,
-  });
+    const userInfo = await client.users.info({
+        user: userId,
+    });
 
-  // Extract the user's first and last name
-  const userName = userInfo.user.profile.first_name;
-  const userLastName = userInfo.user.profile.last_name;
+    // Extract the user's first and last name
+    const userName = userInfo.user.profile.first_name;
+    const userLastName = userInfo.user.profile.last_name;
 
-  // Verifica se l'utente ha già inserito un messaggio
-  if (userAttendances[userId]) {
-    // Se l'utente ha già inserito un messaggio, cancellalo
-    userAttendances[userId] = [];
+    if (userAttendances[userId]) {
+        // Se l'utente ha già inserito un messaggio, cancellalo
+        userAttendances[userId] = [];
 
-    // Rimuovi il primo messaggio con le emoji dall'array emojiResponse
-    if (emojiResponse.length > 0) {
-      emojiResponse = emojiResponse.filter(
-        (message) => !message.startsWith(`${userName} ${userLastName}`)
-      );
-    }
-  }
-
-  updateUserAttendance(userId, textAfterCommand);
-
-  // Generate the emoji
-  const userResponse = generateEmojiResponse(textAfterCommand);
-
-  emojiResponse.push(`${userName} ${userLastName} : ${userResponse}`);
-
-  let allResponses = "";
-  emojiResponse.forEach((element) => {
-    allResponses += `${element}\n`;
-  });
-
-  // Ottieni la lista dei messaggi nel canale
-  const channelHistory = await client.conversations.history({
-    channel: "C062C79CDRN",
-  });
-
-  // Loop attraverso i messaggi e cancellali uno per uno
-  for (const message of channelHistory.messages) {
-    try {
-      if (message.ts) {
-        // Verifica se il messaggio contiene l'etichetta speciale
-        if (message.text && message.text.includes("[NEWWEEK]")) {
-          continue; // Ignora il messaggio
+        // Rimuovi il primo messaggio con le emoji dall'array emojiResponse
+        if (emojiResponse.length > 0) {
+            emojiResponse = emojiResponse.filter((message) => !message.startsWith(`${userName} ${userLastName}`));
         }
-
-        await client.chat.delete({
-          channel: "C062C79CDRN",
-          ts: message.ts, // Timestamp del messaggio da cancellare
-        });
-      }
-    } catch (error) {
-      if (error.message === "An API error occurred: message_not_found") {
-        // Il messaggio non esiste, puoi gestirlo come desideri
-      } else {
-        console.error("Error deleting message:", error);
-      }
     }
-  }
 
-  // Send a message that includes the user's name and the emoji
-  const message = `${allResponses}`;
-  const weekResponseText = generateWeekResponse();
-  await client.chat.postMessage({
-    channel: "C062C79CDRN",
-    text: `${message}\n${weekResponseText}`,
-  });
+    updateUserAttendance(userId, textAfterCommand);
+
+    // Generate the emoji
+    const userResponse = generateEmojiResponse(textAfterCommand);
+
+    emojiResponse.push(`${userName} ${userLastName} : ${userResponse}`);
+
+    let allResponses = '';
+    for (const element of emojiResponse) {
+        allResponses += `${element}\n`;
+    }
+
+    // Ottieni la lista dei messaggi nel canale
+    const channelHistory = await client.conversations.history({
+        channel: 'C062C79CDRN',
+    });
+
+    // Loop attraverso i messaggi e cancellali uno per uno
+    for (const message of channelHistory.messages) {
+        if (message.ts) {
+            // Verifica se il messaggio contiene l'etichetta speciale
+            if (message.text && message.text.includes('[NEWWEEK]')) {
+                continue; // Ignora il messaggio
+            }
+
+            await client.chat.delete({
+                channel: 'C062C79CDRN',
+                ts: message.ts, // Timestamp del messaggio da cancellare
+            });
+        }
+    }
+
+    // Send a message that includes the user's name and the emoji
+    const message = `${allResponses}`;
+    const weekResponseText = generateWeekResponse();
+    await client.chat.postMessage({
+        channel: 'C062C79CDRN',
+        text: `${message}\n${weekResponseText}`,
+    });
 });
 
 //NEW WEEK
-app.command("/newweek", async ({ ack, client }) => {
-  await ack();
+app.command('/newweek', async ({ ack, client }) => {
+    await ack();
 
-  const today = new Date();
-  const nextMonday = new Date(today);
-  nextMonday.setDate(today.getDate() + ((1 + 7 - today.getDay()) % 7)); // Lunedì della settimana successiva
-  const nextFriday = new Date(nextMonday);
-  nextFriday.setDate(nextMonday.getDate() + 4); // Venerdì della settimana successiva
+    const today = new Date();
+    const nextMonday = new Date(today);
+    nextMonday.setDate(today.getDate() + ((1 + 7 - today.getDay()) % 7)); // Lunedì della settimana successiva
+    const nextFriday = new Date(nextMonday);
+    nextFriday.setDate(nextMonday.getDate() + 4); // Venerdì della settimana successiva
 
-  const formattedStartDate = nextMonday.toLocaleDateString("fr-FR", {
-    day: "numeric",
-    month: "numeric",
-    year: "numeric",
-  });
+    const formattedStartDate = nextMonday.toLocaleDateString('fr-FR', {
+        day: 'numeric',
+        month: 'numeric',
+        year: 'numeric',
+    });
 
-  const formattedEndDate = nextFriday.toLocaleDateString("fr-FR", {
-    day: "numeric",
-    month: "numeric",
-    year: "numeric",
-  });
+    const formattedEndDate = nextFriday.toLocaleDateString('fr-FR', {
+        day: 'numeric',
+        month: 'numeric',
+        year: 'numeric',
+    });
 
-  const weekMessage = `Semaine du ${formattedStartDate} au ${formattedEndDate} [NEWWEEK]`;
+    const weekMessage = `Semaine du ${formattedStartDate} au ${formattedEndDate} [NEWWEEK]`;
 
-  await client.chat.postMessage({
-    channel: "C062C79CDRN", // Sostituisci con il tuo canale Slack
-    text: weekMessage,
-  });
+    await client.chat.postMessage({
+        channel: 'C062C79CDRN', // Sostituisci con il tuo canale Slack
+        text: weekMessage,
+    });
 });
