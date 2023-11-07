@@ -12,6 +12,9 @@ const userAttendances = [];
 let emojiResponse = [];
 const weekResponse = [];
 const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
+const presenceValue = 'v';
+const absenceValue = 'x';
+const optionalValue = '?';
 
 for (const day of days) {
     weekResponse[day] = 0;
@@ -29,9 +32,9 @@ function generateEmojiResponse(textAfterCommand) {
     const emojiArray = [];
 
     for (const char of textAfterCommand) {
-        if (char === 'v') {
+        if (char === presenceValue) {
             emojiArray.push('✅');
-        } else if (char === 'x') {
+        } else if (char === absenceValue) {
             emojiArray.push('❌');
         } else {
             emojiArray.push('❓');
@@ -40,14 +43,14 @@ function generateEmojiResponse(textAfterCommand) {
     return emojiArray.join('');
 }
 
-function generateWeekResponseString(day, vCount, qCount) {
-    let response = `${day}: ${vCount}`;
-    if (qCount) {
+function generateWeekResponseString(day, presenceCount, optionalCount) {
+    let response = `${day}: ${presenceCount}`;
+    if (optionalCount) {
         response += ` (ou `;
-        if (qCount > 1) {
+        if (optionalCount > 1) {
             response += ' ';
         }
-        response += `${vCount + qCount}`;
+        response += `${presenceCount + optionalCount}`;
         response += ')';
     }
     return response;
@@ -55,7 +58,7 @@ function generateWeekResponseString(day, vCount, qCount) {
 
 function generateWeekResponse() {
     for (const day of days) {
-        weekResponse[day] = { v: 0, '?': 0 };
+        weekResponse[day] = { presenceCount: 0, optionalCount: 0 };
     }
 
     for (const userId of Object.keys(userAttendances)) {
@@ -63,12 +66,12 @@ function generateWeekResponse() {
         for (const [index, day] of days.entries()) {
             for (const attendance of userAttendance) {
                 switch (attendance[index]) {
-                    case 'v': {
-                        weekResponse[day]['v']++;
+                    case presenceValue: {
+                        weekResponse[day].presenceCount++;
                         break;
                     }
                     case '?': {
-                        weekResponse[day]['?']++;
+                        weekResponse[day].optionalCount++;
                         break;
                     }
                 }
@@ -76,18 +79,30 @@ function generateWeekResponse() {
         }
     }
     const weekResponseArray = days.map((day) => {
-        const vCount = weekResponse[day]['v'];
-        const qCount = weekResponse[day]['?'];
-        return generateWeekResponseString(day, vCount, qCount);
+        return generateWeekResponseString(day, weekResponse[day].presenceCount, weekResponse[day].optionalCount);
     });
 
     return weekResponseArray.join('\n');
 }
 
+function normalizeUserAvailability(value) {
+    let result = '';
+    for (const dayAvailabity of value) {
+        if (dayAvailabity === 'v' || dayAvailabity === 'V' || dayAvailabity === '1') {
+            result += presenceValue;
+        } else if (dayAvailabity === 'x' || dayAvailabity === 'X' || dayAvailabity === '0') {
+            result += absenceValue;
+        } else {
+            result += optionalValue;
+        }
+    }
+    return result;
+}
+
 app.command('/attendance', async ({ ack, body, client }) => {
     await ack();
 
-    const textAfterCommand = body.text;
+    const userAvailabity = normalizeUserAvailability(body.text);
     const userId = body.user_id;
 
     const userInfo = await client.users.info({
@@ -105,9 +120,9 @@ app.command('/attendance', async ({ ack, body, client }) => {
         }
     }
 
-    updateUserAttendance(userId, textAfterCommand);
+    updateUserAttendance(userId, userAvailabity);
 
-    const userResponse = generateEmojiResponse(textAfterCommand);
+    const userResponse = generateEmojiResponse(userAvailabity);
 
     emojiResponse.push(`${userName} ${userLastName} : ${userResponse}`);
 
