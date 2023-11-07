@@ -16,6 +16,91 @@ const presenceValue = 'v';
 const absenceValue = 'x';
 const optionalValue = '?';
 
+app.command('/attendance', async ({ ack, body, client }) => {
+    await ack();
+
+    const userAttendance = normalizeUserAttendance(body.text);
+    const userId = body.user_id;
+
+    const userInfo = await client.users.info({
+        user: userId,
+    });
+
+    const userName = userInfo.user.profile.first_name;
+    const userLastName = userInfo.user.profile.last_name;
+
+    if (userAttendances[userId]) {
+        userAttendances[userId] = [];
+
+        if (emojiResponse.length > 0) {
+            emojiResponse = emojiResponse.filter((message) => !message.startsWith(`${userName} ${userLastName}`));
+        }
+    }
+
+    updateUserAttendance(userId, userAttendance);
+
+    const userResponse = generateEmojiResponse(userAttendance);
+
+    emojiResponse.push(`${userName} ${userLastName} : ${userResponse}`);
+
+    let allResponses = '';
+    for (const element of emojiResponse) {
+        allResponses += `${element}\n`;
+    }
+
+    const channelHistory = await client.conversations.history({
+        channel: 'C062C79CDRN',
+    });
+
+    for (const message of channelHistory.messages) {
+        if (message.ts) {
+            if (message.text && message.text.includes('[NEWWEEK]')) {
+                continue;
+            }
+
+            await client.chat.delete({
+                channel: 'C062C79CDRN',
+                ts: message.ts,
+            });
+        }
+    }
+
+    const message = `${allResponses}`;
+    const weekResponseText = generateWeekResponse();
+    await client.chat.postMessage({
+        channel: 'C062C79CDRN',
+        text: `${message}\n${weekResponseText}`,
+    });
+});
+
+app.command('/newweek', async ({ ack, client }) => {
+    await ack();
+
+    const today = new Date();
+    const nextMonday = new Date(today);
+    nextMonday.setDate(today.getDate() + ((1 + 7 - today.getDay()) % 7));
+    const nextFriday = new Date(nextMonday);
+    nextFriday.setDate(nextMonday.getDate() + 4);
+    const formattedStartDate = nextMonday.toLocaleDateString('fr-FR', {
+        day: 'numeric',
+        month: 'numeric',
+        year: 'numeric',
+    });
+
+    const formattedEndDate = nextFriday.toLocaleDateString('fr-FR', {
+        day: 'numeric',
+        month: 'numeric',
+        year: 'numeric',
+    });
+
+    const weekMessage = `Semaine du ${formattedStartDate} au ${formattedEndDate} [NEWWEEK]`;
+
+    await client.chat.postMessage({
+        channel: 'C062C79CDRN',
+        text: weekMessage,
+    });
+});
+
 for (const day of days) {
     weekResponse[day] = 0;
 }
@@ -85,12 +170,12 @@ function generateWeekResponse() {
     return weekResponseArray.join('\n');
 }
 
-function normalizeUserAvailability(value) {
+function normalizeUserAttendance(value) {
     let result = '';
-    for (const dayAvailabity of value) {
-        if (dayAvailabity === 'v' || dayAvailabity === 'V' || dayAvailabity === '1') {
+    for (const dayAttendance of value) {
+        if (dayAttendance === 'v' || dayAttendance === 'V' || dayAttendance === '1') {
             result += presenceValue;
-        } else if (dayAvailabity === 'x' || dayAvailabity === 'X' || dayAvailabity === '0') {
+        } else if (dayAttendance === 'x' || dayAttendance === 'X' || dayAttendance === '0') {
             result += absenceValue;
         } else {
             result += optionalValue;
@@ -98,88 +183,3 @@ function normalizeUserAvailability(value) {
     }
     return result;
 }
-
-app.command('/attendance', async ({ ack, body, client }) => {
-    await ack();
-
-    const userAvailabity = normalizeUserAvailability(body.text);
-    const userId = body.user_id;
-
-    const userInfo = await client.users.info({
-        user: userId,
-    });
-
-    const userName = userInfo.user.profile.first_name;
-    const userLastName = userInfo.user.profile.last_name;
-
-    if (userAttendances[userId]) {
-        userAttendances[userId] = [];
-
-        if (emojiResponse.length > 0) {
-            emojiResponse = emojiResponse.filter((message) => !message.startsWith(`${userName} ${userLastName}`));
-        }
-    }
-
-    updateUserAttendance(userId, userAvailabity);
-
-    const userResponse = generateEmojiResponse(userAvailabity);
-
-    emojiResponse.push(`${userName} ${userLastName} : ${userResponse}`);
-
-    let allResponses = '';
-    for (const element of emojiResponse) {
-        allResponses += `${element}\n`;
-    }
-
-    const channelHistory = await client.conversations.history({
-        channel: 'C062C79CDRN',
-    });
-
-    for (const message of channelHistory.messages) {
-        if (message.ts) {
-            if (message.text && message.text.includes('[NEWWEEK]')) {
-                continue;
-            }
-
-            await client.chat.delete({
-                channel: 'C062C79CDRN',
-                ts: message.ts,
-            });
-        }
-    }
-
-    const message = `${allResponses}`;
-    const weekResponseText = generateWeekResponse();
-    await client.chat.postMessage({
-        channel: 'C062C79CDRN',
-        text: `${message}\n${weekResponseText}`,
-    });
-});
-
-app.command('/newweek', async ({ ack, client }) => {
-    await ack();
-
-    const today = new Date();
-    const nextMonday = new Date(today);
-    nextMonday.setDate(today.getDate() + ((1 + 7 - today.getDay()) % 7));
-    const nextFriday = new Date(nextMonday);
-    nextFriday.setDate(nextMonday.getDate() + 4);
-    const formattedStartDate = nextMonday.toLocaleDateString('fr-FR', {
-        day: 'numeric',
-        month: 'numeric',
-        year: 'numeric',
-    });
-
-    const formattedEndDate = nextFriday.toLocaleDateString('fr-FR', {
-        day: 'numeric',
-        month: 'numeric',
-        year: 'numeric',
-    });
-
-    const weekMessage = `Semaine du ${formattedStartDate} au ${formattedEndDate} [NEWWEEK]`;
-
-    await client.chat.postMessage({
-        channel: 'C062C79CDRN',
-        text: weekMessage,
-    });
-});
