@@ -81,17 +81,29 @@ app.command('/newweek', async ({ ack, client }) => {
     nextMonday.setDate(today.getDate() + ((1 + 7 - today.getDay()) % 7));
     const nextFriday = new Date(nextMonday);
     nextFriday.setDate(nextMonday.getDate() + 4);
-    const formattedStartDate = nextMonday.toLocaleDateString('fr-FR', {
-        day: 'numeric',
-        month: 'numeric',
-        year: 'numeric',
-    });
 
-    const formattedEndDate = nextFriday.toLocaleDateString('fr-FR', {
-        day: 'numeric',
-        month: 'numeric',
-        year: 'numeric',
-    });
+    function formatDate(date) {
+        return date.toLocaleDateString('fr-FR', {
+            day: 'numeric',
+            month: 'numeric',
+            year: 'numeric',
+        });
+    }
+
+    const formattedStartDate = formatDate(nextMonday);
+    const formattedEndDate = formatDate(nextFriday);
+
+    // const formattedStartDate = nextMonday.toLocaleDateString('fr-FR', {
+    //     day: 'numeric',
+    //     month: 'numeric',
+    //     year: 'numeric',
+    // });
+
+    // const formattedEndDate = nextFriday.toLocaleDateString('fr-FR', {
+    //     day: 'numeric',
+    //     month: 'numeric',
+    //     year: 'numeric',
+    // });
 
     const weekMessage = `Semaine du ${formattedStartDate} au ${formattedEndDate} [NEWWEEK]`;
 
