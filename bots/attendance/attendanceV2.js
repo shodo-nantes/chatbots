@@ -78,7 +78,7 @@ app.command('/newweek', async ({ ack, client }) => {
 
     const today = new Date();
     const nextMonday = new Date(today);
-    nextMonday.setDate(today.getDate() + ((1 + 7 - today.getDay()) % 7));
+    nextMonday.setDate(today.getDate() + ((8 - today.getDay()) % 7));
     const nextFriday = new Date(nextMonday);
     nextFriday.setDate(nextMonday.getDate() + 4);
     function formatDate(date) {
