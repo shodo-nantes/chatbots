@@ -76,19 +76,6 @@ app.command('/attendance', async ({ ack, body, client }) => {
 app.command('/newweek', async ({ ack, client }) => {
     await ack();
 
-    const today = new Date();
-    const nextMonday = new Date(today);
-    nextMonday.setDate(today.getDate() + ((8 - today.getDay()) % 7));
-    const nextFriday = new Date(nextMonday);
-    nextFriday.setDate(nextMonday.getDate() + 4);
-    function formatDate(date) {
-        return date.toLocaleDateString('fr-FR', {
-            day: 'numeric',
-            month: 'numeric',
-            year: 'numeric',
-        });
-    }
-
     const formattedStartDate = formatDate(nextMonday);
     const formattedEndDate = formatDate(nextFriday);
     // const formattedStartDate = nextMonday.toLocaleDateString('fr-FR', {
@@ -110,6 +97,19 @@ app.command('/newweek', async ({ ack, client }) => {
         text: weekMessage,
     });
 });
+
+const today = new Date();
+const nextMonday = new Date(today);
+nextMonday.setDate(today.getDate() + ((8 - today.getDay()) % 7));
+const nextFriday = new Date(nextMonday);
+nextFriday.setDate(nextMonday.getDate() + 4);
+function formatDate(date) {
+    return date.toLocaleDateString('fr-FR', {
+        day: 'numeric',
+        month: 'numeric',
+        year: 'numeric',
+    });
+}
 
 for (const day of days) {
     weekResponse[day] = 0;
