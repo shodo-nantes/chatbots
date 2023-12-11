@@ -1,4 +1,4 @@
-const { normalizeUserAttendance, generateEmojiResponse } = require('./presences');
+const { normalizeUserAttendance, generateEmojiResponse, bodyTextIsInvalid } = require('./presences');
 
 describe('Attendance', () => {
     describe('Normalize user attendance', () => {
@@ -31,6 +31,18 @@ describe('Attendance', () => {
     describe('Generate emoji response', () => {
         test('vvxx? = ✅✅❌❌❓ ', () => {
             expect(generateEmojiResponse('vvxx?')).toBe('✅✅❌❌❓');
+        });
+    });
+
+    describe('Body text has 5 chars', () => {
+        test('vvxx is invalid', () => {
+            expect(bodyTextIsInvalid({ text: 'vvxx' })).toBe(true);
+        });
+        test('vvvvvv is invalid', () => {
+            expect(bodyTextIsInvalid({ text: 'vvvvvv' })).toBe(true);
+        });
+        test('????? is valid', () => {
+            expect(bodyTextIsInvalid({ text: '?????' })).toBe(false);
         });
     });
 });

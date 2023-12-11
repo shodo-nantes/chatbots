@@ -7,6 +7,9 @@ const absenceValue = 'x';
 const optionalValue = '?';
 
 async function presences(body, client) {
+    //sicurezza 5 caratteri
+    if (bodyTextIsInvalid(body)) return;
+
     const userAttendance = normalizeUserAttendance(body.text);
     const { userId, userName, userLastName } = await extractUserInfo(body, client);
 
@@ -24,6 +27,10 @@ async function presences(body, client) {
     await deleteLastAttendanceMessage(client);
 
     await createUpdatedAttendanceMessage(allResponses, client);
+}
+
+function bodyTextIsInvalid(body) {
+    return body.text.length !== 5;
 }
 
 async function createUpdatedAttendanceMessage(allResponses, client) {
@@ -159,4 +166,5 @@ module.exports = {
     normalizeUserAttendance,
     generateEmojiResponse,
     updateUserAttendance,
+    bodyTextIsInvalid,
 };
