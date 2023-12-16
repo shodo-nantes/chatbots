@@ -37,14 +37,14 @@ async function createUpdatedAttendanceMessage(allResponses, client) {
     const message = `${allResponses}`;
     const weekResponseText = generateWeekResponse();
     await client.chat.postMessage({
-        slackChannel: process.env.SLACK_CHANNEL,
+        channel: process.env.SLACK_CHANNEL,
         text: `${message}\n${weekResponseText}`,
     });
 }
 
 async function deleteLastAttendanceMessage(client) {
     const channelHistory = await client.conversations.history({
-        slackChannel: process.env.SLACK_CHANNEL,
+        channel: process.env.SLACK_CHANNEL,
     });
 
     for (const message of channelHistory.messages) {
@@ -54,7 +54,7 @@ async function deleteLastAttendanceMessage(client) {
             }
 
             await client.chat.delete({
-                slackChannel: process.env.SLACK_CHANNEL,
+                channel: process.env.SLACK_CHANNEL,
                 ts: message.ts,
             });
         }
